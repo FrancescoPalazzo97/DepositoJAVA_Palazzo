@@ -47,53 +47,65 @@ public class App {
     static boolean login(String username, String password) {
         int index = usernames.indexOf(username); // Mi prendo l'indice dell'username
 
-        // se l'username esiste e la password corrisponde vado avanti
-        if (index != -1 && passwords.get(index).equals(password)) {
-            System.out.println("Login effettuato con successo");
-            operationsCounter = 0;
-            return true;
+        // Controllo che non ci siano problemi verificando se l'username è presente e
+        // coincida con l'indice della password
+        if (index == -1 || !passwords.get(index).equals(password)) {
+            printErrorAccess();
+            return false;
         }
 
-        // Altrimenti stampo messaggio di errore
-        printErrorAccess();
-        return false;
+        // se il controllo passa stampo messaggio di successo e vado avanti
+        System.out.println("Login effettuato con successo");
+        operationsCounter = 0;
+        return true;
     }
 
+    // Metodo che gestisce l'inserimento dei valori e le operazioni matematiche dato
+    // il tipo di operazione
     static void executeOperations(int type) {
         int userInput;
 
-        if (type == 5) {
+        if (type == 5) { // Se l'input è 5 impost userInput forzatamente a 2 (non do la possibilità di
+                         // inserire più di 2 numeri per la potenza)
             userInput = 2;
             System.out.println("Operazione Potenza: inserire base ed esponente.");
-        } else {
+        } else { // Altrimenti chiedo quanti numeri vuole inserire
             System.out.println("Quanti numeri vuoi inserire?");
             userInput = inInt.nextInt();
         }
 
+        // Se l'input è 0 posso tornare e non eseguire nulla dato che non ci sono numeri
+        // su cui fare operazioni, altrimenti procedo
         if (userInput <= 0) {
             return;
         }
 
-        ArrayList<Integer> nums = new ArrayList<>();
-        String stringValue = "";
+        ArrayList<Integer> nums = new ArrayList<>(); // Instanzio una List per i numeri che inserirà l'utente
+        String stringValue = ""; // Mi inizializzo una stringa vuota
 
+        // Ciclo n volte in base all'input dell'utente
         for (int i = 0; i < userInput; i++) {
+            // Controllo che l'utente abbia scelto la potenza in tal caso stampo messaggi
+            // differenti
             if (type == 5) {
                 System.out.println(i == 0 ? "Inserisci la base: " : "Inserisci l'esponente: ");
             } else {
                 System.out.print("Numero " + (i + 1) + ": ");
             }
 
-            int inputValue = inInt.nextInt();
-            nums.add(inputValue);
-            stringValue += inputValue + (i == userInput - 1 ? "" : ", ");
+            int inputValue = inInt.nextInt(); // Mi salvo l'input dell'utente
+            nums.add(inputValue); // Lo inserisco nella List
+            stringValue += inputValue + (i == userInput - 1 ? "" : ", "); // Se l'elemento è l'ultimo non aggiungo la
+                                                                          // virgola
         }
 
-        int result = nums.get(0);
-        String operationName = "";
+        int result = nums.get(0); // inizializzo result con primo valore di nums
+        String operationName = ""; // Inizializzo stringa vuota
 
+        // Ciclo per la lunghezza di nums
         for (int i = 1; i < nums.size(); i++) {
 
+            // Gestisco le casistiche con uno switch su type
             switch (type) {
                 case 1:
                     result += nums.get(i);
@@ -111,17 +123,18 @@ public class App {
                     break;
 
                 case 4:
-                    if (nums.get(i) == 0) {
+                    if (nums.get(i) == 0) { // Se un numero è 0 lancio errore
                         System.out.println("Errore: divisione per zero");
                         return;
-                    } else {
-                        result /= nums.get(i);
-                        operationName = "Divisione";
                     }
+
+                    result /= nums.get(i);
+                    operationName = "Divisione";
                     break;
 
                 case 5:
-                    result = (int) Math.pow(result, nums.get(i));
+                    result = (int) Math.pow(result, nums.get(i)); // Eseguo la potenza utilizzando la classe Math e mi
+                                                                  // torno un intero
                     operationName = "Potenza";
                     break;
 
@@ -130,26 +143,29 @@ public class App {
             }
         }
 
+        // Salvo risultato nella sua List così come per lo storico operazioni
         results.add(result);
         historyValues.add(operationName + " di [" + stringValue + "]");
         System.out.println("Risultato: " + result);
 
-        operationsCounter++;
+        operationsCounter++; // Incremeto il contatore delle operazioni effettuate
 
-        if (operationsCounter >= 4) {
+        if (operationsCounter >= 4) { // Se raggiunge il limite slogga l'utente
             System.out.println("Limite operazioni raggiunto. Verrai slogagto");
             isLogged = false;
         }
     }
 
+    // Metodo per mostrate lo storico
     static void showHistory() {
         System.out.println("\n--- STORICO OPERAZIONI ---");
 
-        if (historyValues.isEmpty()) {
+        if (historyValues.isEmpty()) { // Se vuoto stampo un altro messaggio e non procedo con il resto del codice
             System.out.println("Al momento non hai ancora effetuato nessuna operazione");
             return;
         }
 
+        // Altrimenti stampo lo storico
         for (int i = 0; i < historyValues.size(); i++) {
             System.out.println(historyValues.get(i) + " = " + results.get(i));
         }
@@ -158,7 +174,8 @@ public class App {
     public static void main(String[] args) throws Exception {
 
         while (true) {
-            if (!isLogged) {
+            if (!isLogged) { // Blocco codice se non loggato
+                // menu
                 System.out.println("-----BENVENUTO-----");
                 System.out.println("1 - Registrati");
                 System.out.println("2 - Login");
@@ -167,15 +184,18 @@ public class App {
 
                 int userChoice = inInt.nextInt();
 
+                // Se 0 esco
                 if (userChoice == 0) {
                     break;
                 }
 
-                System.out.println("Inserisci un username con il quale registrarti");
+                // Prendo gli input dell'utete
+                System.out.println("Inserisci un username");
                 String username = inString.nextLine();
                 System.out.println("Inserisci la password");
                 String password = inString.nextLine();
 
+                // Switch per gestire la scelta dell'utente
                 switch (userChoice) {
                     case 1:
                         signin(username, password);
@@ -188,7 +208,8 @@ public class App {
                     default:
                         break;
                 }
-            } else {
+            } else { // Blocco codice se loggato
+                // menu
                 System.out.println("\n--- MENU (Operazioni dispoinbili: " + operationsCounter + "/4) ---");
                 System.out.println("1 - Calcolatrice");
                 System.out.println("2 - Storico");
@@ -196,6 +217,7 @@ public class App {
 
                 int userChoice = inInt.nextInt();
 
+                // Switch per gestire la scelta dell'utente
                 switch (userChoice) {
                     case 1:
                         System.out.println("1 - Somma");
@@ -209,6 +231,7 @@ public class App {
                         if (operationChoice >= 1 && operationChoice <= 5) {
                             executeOperations(operationChoice);
                         }
+
                         break;
 
                     case 2:
