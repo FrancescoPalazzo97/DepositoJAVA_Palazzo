@@ -38,6 +38,9 @@ public class Pilot {
             return;
         }
 
+        System.out.println(3 + 3);
+        System.out.println(3 * 2);
+
         this.flightHours = flightHours;
     }
 
