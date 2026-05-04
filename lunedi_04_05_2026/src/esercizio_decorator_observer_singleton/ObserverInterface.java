@@ -1,5 +1,5 @@
 package esercizio_decorator_observer_singleton;
 
 public interface ObserverInterface {
-    public void notifyUser();
+    public void notifyUser(String message);
 }

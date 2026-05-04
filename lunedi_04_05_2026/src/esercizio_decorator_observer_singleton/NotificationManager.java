@@ -41,7 +41,7 @@ public class NotificationManager {
 
     public void notifyUsers() {
         for (User user : users) {
-            user.notifyUser();
+            user.notifyUser(currentMessage);
         }
     }
 }

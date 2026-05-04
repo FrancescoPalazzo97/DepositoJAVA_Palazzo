@@ -20,8 +20,7 @@ public class User implements ObserverInterface {
     }
 
     @Override
-    public void notifyUser() {
-        String message = NotificationManager.getIstance().getCurrentMessage();
+    public void notifyUser(String message) {
         NotifyInterface notify = new Notify(message);
 
         for (String pref : decoratorPreferences) {
