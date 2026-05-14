@@ -68,16 +68,16 @@ public class BookRestController {
     public ResponseEntity<?> update(@PathVariable Integer id, @Valid @RequestBody Book updateBook,
             BindingResult bindingResult) {
 
+        if (!bookRepo.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
         if (bindingResult.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
 
             bindingResult.getFieldErrors().forEach(e -> errors.put(e.getField(), e.getDefaultMessage()));
 
             return ResponseEntity.badRequest().body(errors);
-        }
-
-        if (!bookRepo.existsById(id)) {
-            return ResponseEntity.notFound().build();
         }
 
         updateBook.setId(id);
