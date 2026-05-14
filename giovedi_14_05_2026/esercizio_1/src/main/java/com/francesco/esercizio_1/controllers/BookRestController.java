@@ -1,10 +1,13 @@
 package com.francesco.esercizio_1.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,20 +49,38 @@ public class BookRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Book> store(@Valid @RequestBody Book newBook) {
+    public ResponseEntity<?> store(@Valid @RequestBody Book newBook, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+
+            bindingResult.getFieldErrors().forEach(e -> errors.put(e.getField(), e.getDefaultMessage()));
+
+            return ResponseEntity.badRequest().body(errors);
+        }
+
         Book saved = bookRepo.save(newBook);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Book> update(@PathVariable Integer id, @Valid @RequestBody Book updateBook) {
+    public ResponseEntity<?> update(@PathVariable Integer id, @Valid @RequestBody Book updateBook,
+            BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+
+            bindingResult.getFieldErrors().forEach(e -> errors.put(e.getField(), e.getDefaultMessage()));
+
+            return ResponseEntity.badRequest().body(errors);
+        }
+
         if (!bookRepo.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
 
         updateBook.setId(id);
-
         Book updated = bookRepo.save(updateBook);
 
         return ResponseEntity.ok(updated);
@@ -67,6 +88,7 @@ public class BookRestController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
+
         if (!bookRepo.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
