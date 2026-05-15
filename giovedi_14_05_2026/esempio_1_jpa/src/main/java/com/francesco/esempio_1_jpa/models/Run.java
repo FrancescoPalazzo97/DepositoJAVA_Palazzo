@@ -10,6 +10,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "runs")
@@ -18,44 +25,30 @@ public class Run {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "title", nullable = false, length = 255)
+    @Column(name = "title", nullable = false, length = 100)
+    @NotBlank(message = "The title cannot be null, nor empty or blank")
+    @Size(min = 3, max = 100, message = "Title must be between 3 and 100 characters")
     private String title;
 
     @Column(name = "startedOn", nullable = false)
+    @NotNull(message = "Start date cannot be null")
+    @PastOrPresent(message = "Start date cannot be in the future")
     private LocalDateTime startedOn;
 
     @Column(name = "completedOn", nullable = false)
+    @NotNull(message = "End date cannot be null")
+    @FutureOrPresent(message = "End date cannot be in the past")
     private LocalDateTime completedOn;
 
     @Column(name = "miles", nullable = false)
+    @Positive(message = "Miles must be a positive value")
+    @Max(value = 200, message = "Miles cannot exceed 200")
     private Integer miles;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "location", nullable = false)
+    @NotNull(message = "Location cannot be null")
     private Location location;
-
-    protected Run() {
-    }
-
-    public Run(
-            String title,
-            LocalDateTime startedOn,
-            LocalDateTime completedOn,
-            Integer miles,
-            Location location) {
-        if (miles < 0) {
-            throw new IllegalArgumentException("Le miglia non possono essere negative");
-        }
-        if (completedOn.isBefore(startedOn)) {
-            throw new IllegalArgumentException("La data di fine deve essere dopo quella di inizio");
-        }
-
-        this.title = title;
-        this.startedOn = startedOn;
-        this.completedOn = completedOn;
-        this.miles = miles;
-        this.location = location;
-    }
 
     public Integer getId() {
         return this.id;
