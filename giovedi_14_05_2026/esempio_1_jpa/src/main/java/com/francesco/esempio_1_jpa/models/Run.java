@@ -2,6 +2,8 @@ package com.francesco.esempio_1_jpa.models;
 
 import java.time.LocalDateTime;
 
+import com.francesco.esempio_1_jpa.models.records.RunResponse;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -45,10 +47,21 @@ public class Run {
     @Max(value = 200, message = "Miles cannot exceed 200")
     private Integer miles;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "location", nullable = false)
+    @Enumerated(EnumType.STRING)
     @NotNull(message = "Location cannot be null")
     private Location location;
+
+    public Run() {
+    }
+
+    public Run(String title, LocalDateTime startedOn, LocalDateTime completedOn, Integer miles, Location location) {
+        this.title = title;
+        this.startedOn = startedOn;
+        this.completedOn = completedOn;
+        this.miles = miles;
+        this.location = location;
+    }
 
     public Integer getId() {
         return this.id;
