@@ -1,5 +1,6 @@
 package com.francesco.esercizio_1.models;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -7,10 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "books")
@@ -19,21 +16,25 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank(message = "Title must not be null, nor empty or blank")
-    @Size(min = 3, max = 100, message = "Title must be higher than 3 and lower than 100")
+    @Column(name = "title", nullable = false, length = 100)
     private String title;
 
-    @NotBlank(message = "Author must not be null, nor empty or blank")
-    @Size(min = 3, max = 100, message = "Author must be higher than 3 and lower than 100")
+    @Column(name = "author", nullable = false, length = 100)
     private String author;
 
-    @NotNull(message = "Pages cannot be null")
-    @Positive(message = "Pages must be positive")
+    @Column(name = "pages", nullable = false)
     private Integer pages;
 
-    @NotNull(message = "Genre cannot be null")
+    @Column(name = "genre", nullable = false)
     @Enumerated(EnumType.STRING)
     private Genre genre;
+
+    public Book(String title, String author, Integer pages, Genre genre) {
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.genre = genre;
+    }
 
     public Integer getId() {
         return this.id;

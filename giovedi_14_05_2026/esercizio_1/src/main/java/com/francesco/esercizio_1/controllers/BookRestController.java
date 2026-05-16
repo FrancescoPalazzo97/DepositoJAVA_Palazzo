@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.francesco.esercizio_1.models.Book;
+import com.francesco.esercizio_1.records.BookRequest;
+import com.francesco.esercizio_1.records.BookResponse;
 import com.francesco.esercizio_1.services.BookService;
 
 import jakarta.validation.Valid;
@@ -28,31 +29,31 @@ public class BookRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Book>> index() {
-        List<Book> books = bookService.findAll();
+    public ResponseEntity<List<BookResponse>> index() {
+        List<BookResponse> books = bookService.findAll();
 
         return ResponseEntity.ok(books);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Book> show(@PathVariable Integer id) {
-        Book foundedBook = bookService.getById(id);
+    public ResponseEntity<BookResponse> show(@PathVariable Integer id) {
+        BookResponse foundedBook = bookService.getById(id);
 
         return ResponseEntity.ok(foundedBook);
     }
 
     @PostMapping
-    public ResponseEntity<Book> store(@Valid @RequestBody Book newBook) {
-        Book saved = bookService.save(newBook);
+    public ResponseEntity<BookResponse> store(@Valid @RequestBody BookRequest newBookRequest) {
+        BookResponse savedBook = bookService.save(newBookRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedBook);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Book> update(@PathVariable Integer id, @Valid @RequestBody Book updateBook) {
-        Book updated = bookService.update(id, updateBook);
+    public ResponseEntity<BookResponse> update(@PathVariable Integer id, @Valid @RequestBody BookRequest updateBook) {
+        BookResponse updatedBook = bookService.update(id, updateBook);
 
-        return ResponseEntity.ok(updated);
+        return ResponseEntity.ok(updatedBook);
     }
 
     @DeleteMapping("/{id}")

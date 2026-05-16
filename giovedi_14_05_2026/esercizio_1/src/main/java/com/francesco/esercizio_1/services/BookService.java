@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import com.francesco.esercizio_1.exceptions.BookNotFoundException;
 import com.francesco.esercizio_1.models.Book;
+import com.francesco.esercizio_1.records.BookRequest;
+import com.francesco.esercizio_1.records.BookResponse;
 import com.francesco.esercizio_1.repos.BookRepo;
 
 public class BookService {
@@ -14,34 +16,42 @@ public class BookService {
         this.bookRepo = bookRepo;
     }
 
-    public List<Book> findAll() {
-        return bookRepo.findAll();
+    public List<BookResponse> findAll() {
+        return bookRepo
+                .findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
 
-    public Book getById(Integer id) {
+    public BookResponse getById(Integer id) {
         Optional<Book> result = bookRepo.findById(id);
 
         if (result.isEmpty()) {
             throw new BookNotFoundException(id);
         }
 
-        return result.get();
+        return toResponse(result.get());
     }
 
-    public Book save(Book newBook) {
-        return bookRepo.save(newBook);
+    public BookResponse save(BookRequest newBookRequest) {
+        Book newBook = toEntity(newBookRequest);
+        Book savedBook = bookRepo.save(newBook);
+        return toResponse(savedBook);
     }
 
-    public Book update(Integer id, Book updatedBook) {
+    public BookResponse update(Integer id, BookRequest bookRequestUpdate) {
         Optional<Book> result = bookRepo.findById(id);
 
         if (result.isEmpty()) {
             throw new BookNotFoundException(id);
         }
 
-        updatedBook.setId(result.get().getId());
+        Book bookUpdate = toEntity(bookRequestUpdate);
+        bookUpdate.setId(result.get().getId());
+        Book updatedBook = bookRepo.save(bookUpdate);
 
-        return bookRepo.save(updatedBook);
+        return toResponse(updatedBook);
     }
 
     public void delete(Integer id) {
@@ -51,5 +61,22 @@ public class BookService {
         }
 
         bookRepo.deleteById(id);
+    }
+
+    private Book toEntity(BookRequest bookRequest) {
+        return new Book(
+                bookRequest.title(),
+                bookRequest.author(),
+                bookRequest.pages(),
+                bookRequest.genre());
+    }
+
+    private BookResponse toResponse(Book book) {
+        return new BookResponse(
+                book.getId(),
+                book.getTitle(),
+                book.getAuthor(),
+                book.getPages(),
+                book.getGenre());
     }
 }
