@@ -2,8 +2,6 @@ package com.francesco.esempio_1_jpa.models;
 
 import java.time.LocalDateTime;
 
-import com.francesco.esempio_1_jpa.models.records.RunResponse;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

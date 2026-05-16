@@ -7,9 +7,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "books")
@@ -19,13 +20,15 @@ public class Book {
     private Integer id;
 
     @NotBlank(message = "Title must not be null, nor empty or blank")
+    @Size(min = 3, max = 100, message = "Title must be higher than 3 and lower than 100")
     private String title;
 
     @NotBlank(message = "Author must not be null, nor empty or blank")
+    @Size(min = 3, max = 100, message = "Author must be higher than 3 and lower than 100")
     private String author;
 
     @NotNull(message = "Pages cannot be null")
-    @Min(value = 0, message = "Number of copies cannot be negative")
+    @Positive(message = "Pages must be positive")
     private Integer pages;
 
     @NotNull(message = "Genre cannot be null")
