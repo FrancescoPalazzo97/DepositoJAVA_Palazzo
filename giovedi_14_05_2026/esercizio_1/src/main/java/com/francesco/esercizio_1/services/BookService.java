@@ -3,12 +3,15 @@ package com.francesco.esercizio_1.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+
 import com.francesco.esercizio_1.exceptions.BookNotFoundException;
 import com.francesco.esercizio_1.models.Book;
 import com.francesco.esercizio_1.records.BookRequest;
 import com.francesco.esercizio_1.records.BookResponse;
 import com.francesco.esercizio_1.repos.BookRepo;
 
+@Service
 public class BookService {
     private BookRepo bookRepo;
 

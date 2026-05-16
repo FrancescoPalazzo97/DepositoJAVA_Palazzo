@@ -29,6 +29,9 @@ public class Book {
     @Enumerated(EnumType.STRING)
     private Genre genre;
 
+    public Book() {
+    }
+
     public Book(String title, String author, Integer pages, Genre genre) {
         this.title = title;
         this.author = author;

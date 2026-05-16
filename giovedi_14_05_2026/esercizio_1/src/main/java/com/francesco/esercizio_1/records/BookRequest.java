@@ -8,12 +8,12 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 public record BookRequest(
-        @NotBlank(message = "Title must not be null, nor empty or blank") @Size(min = 3, max = 100, message = "Title must be higher than 3 and lower than 100") String title,
+                @NotBlank(message = "Title cannot be null, nor empty or blank") @Size(min = 3, max = 100, message = "Title must be higher than 3 and lower than 100") String title,
 
-        @NotBlank(message = "Author must not be null, nor empty or blank") @Size(min = 3, max = 100, message = "Author must be higher than 3 and lower than 100") String author,
+                @NotBlank(message = "Author cannot be null, nor empty or blank") @Size(min = 3, max = 100, message = "Author must be higher than 3 and lower than 100") String author,
 
-        @NotNull(message = "Pages cannot be null") @Positive(message = "Pages must be positive") Integer pages,
+                @NotNull(message = "Pages cannot be null") @Positive(message = "Pages must be positive") Integer pages,
 
-        @NotNull(message = "Genre cannot be null") Genre genre) {
+                @NotNull(message = "Genre cannot be null") Genre genre) {
 
 }
