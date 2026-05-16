@@ -3,7 +3,8 @@ package com.francesco.esempio_1_jpa.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.francesco.esempio_1_jpa.models.Run;
+import com.francesco.esempio_1_jpa.models.records.RunRequest;
+import com.francesco.esempio_1_jpa.models.records.RunResponse;
 import com.francesco.esempio_1_jpa.services.RunService;
 
 import jakarta.validation.Valid;
@@ -29,29 +30,29 @@ public class RunController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Run>> index() {
-        List<Run> runs = runService.findAll();
+    public ResponseEntity<List<RunResponse>> index() {
+        List<RunResponse> runsResponses = runService.findAll();
 
-        return ResponseEntity.ok(runs);
+        return ResponseEntity.ok(runsResponses);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Run> show(@PathVariable Integer id) {
-        Run result = runService.getById(id);
+    public ResponseEntity<RunResponse> show(@PathVariable Integer id) {
+        RunResponse result = runService.getById(id);
 
         return ResponseEntity.ok(result);
     }
 
     @PostMapping
-    public ResponseEntity<Run> store(@Valid @RequestBody Run run) {
-        Run saved = runService.create(run);
+    public ResponseEntity<RunResponse> store(@Valid @RequestBody RunRequest runRequest) {
+        RunResponse saved = runService.create(runRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Run> update(@PathVariable Integer id, @Valid @RequestBody Run runDetails) {
-        Run result = runService.update(id, runDetails);
+    public ResponseEntity<RunResponse> update(@PathVariable Integer id, @Valid @RequestBody RunRequest runRequest) {
+        RunResponse result = runService.update(id, runRequest);
 
         return ResponseEntity.ok(result);
     }
